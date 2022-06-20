@@ -67,7 +67,8 @@ public class UserController {
 
     // email 중복 확인
     @ResponseBody
-   @GetMapping("/user/emailDupCheck/{mail}")
+    @GetMapping("/user/emailDupCheck/{mail}")
+
     public Boolean emailDupCheck(@PathVariable String mail) {
 
         return userService.checkMailDuplicate(mail);
