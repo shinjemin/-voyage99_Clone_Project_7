@@ -28,16 +28,26 @@ public class User extends Timestamped{
     private String password;
 
     @Column(nullable = false)
-    private int year;
+    private String year;
 
     @Column(nullable = false)
-    private int month;
+    private String month;
 
     @Column(nullable = false)
-    private int day;
+    private String day;
 
     @Column
     private String imageUrl;
 
+
+    public User(String familyName, String givenName, String mail, String password, String year, String month, String day) {
+        this.familyName = familyName;
+        this.givenName = givenName;
+        this.mail = mail;
+        this.password = password;
+        this.year = year;
+        this.month = month;
+        this.day = day;
+    }
 
 }
