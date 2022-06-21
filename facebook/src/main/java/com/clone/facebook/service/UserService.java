@@ -60,6 +60,9 @@ public class UserService {
             return new UserLoginRespDto(false, "리프레시 토큰 생성에 실패 하였습니다.");
 
         try {
+//            User user = userRepository.findById(id).orElseThrow(
+//                    () -> new NullPointerException("id가 존재하지않습니다")
+//            );
             Algorithm algorithm = Algorithm.HMAC256("7ZWt7ZW0OTkgN");
             token = JWT.create()
                     .withIssuer("gkdgo99")
@@ -67,6 +70,7 @@ public class UserService {
                     .withExpiresAt(expireDate)
                     .withClaim("id", id)
                     .withClaim("mail", mail)
+//                    .withClaim("familyName", user.getFamilyName())
                     .sign(algorithm);
         } catch (JWTCreationException exception){
 
@@ -78,7 +82,7 @@ public class UserService {
         refreshTokenRepository.save(new RefreshToken(token, refreshToken));
         System.out.println(token);
 
-        return new UserLoginRespDto(true, token, refreshToken, "로그인 성공");
+        return new UserLoginRespDto(true, token, refreshToken, "로그인 성공", mail);
     }
 
     // 토큰 재발급
