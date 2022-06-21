@@ -5,7 +5,6 @@ import com.clone.facebook.models.Comment;
 import com.clone.facebook.service.CommentService;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
