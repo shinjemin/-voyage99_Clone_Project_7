@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.security.NoSuchAlgorithmException;
 
+
 @RestController
 public class UserController {
 
@@ -64,6 +65,11 @@ public class UserController {
 
         return userService.registerUser(Dto);
     }
+    //프로필 이미지
+//    @PostMapping("/api/user/image")
+//    public ProfileResponseDto registImage(@RequestParam("image") MultipartFile file,@AuthenticationPrincipal  UserDetailsImpl userDetails) throws IOException {
+//        return userService.registImage(file, userDetails);
+//    }
 
     // email 중복 확인
     @ResponseBody
