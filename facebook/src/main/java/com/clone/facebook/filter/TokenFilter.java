@@ -43,7 +43,7 @@ public class TokenFilter implements Filter {
                 DecodedJWT jwt = null;
 
                 try { // JWT SHA256사용, 시크릿 키 : 7ZWt7ZW0OTkgN+yhsCDtjpjsnbTsiqTrtoEg7YG066Gg7L2U65SpIO2Vre2VtDk5IDfsobAg7Y6Y 7J207Iqk67aBIO2BtOuhoOy9lOuUqQ== <- 시크릿 키는 커스텀이지만 한 번 정하면 다른 곳에서도 동일 해야함
-                    Algorithm algorithm = Algorithm.HMAC256("7ZWt7ZW0OTkgN+yhsCDtjpjsnbTsiqTrtoEg7YG066Gg7L2U65SpIO2Vre2VtDk5IDfsobAg7Y6Y 7J207Iqk67aBIO2BtOuhoOy9lOuUqQ=="); //use more secure key
+                    Algorithm algorithm = Algorithm.HMAC256("rlaalswnrkgoTdma"); //use more secure key
                     JWTVerifier verifier = JWT.require(algorithm)
                             .withIssuer("gkdgo99") // 발급자
                             .build(); //Reusable verifier instance

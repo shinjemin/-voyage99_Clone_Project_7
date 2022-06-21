@@ -1,5 +1,9 @@
 package com.clone.facebook.service;
 
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.interfaces.DecodedJWT;
+import com.auth0.jwt.interfaces.JWTVerifier;
 import com.clone.facebook.dto.PostRequestDto;
 import com.clone.facebook.dto.PostResponseDto;
 import com.clone.facebook.models.Post;
@@ -21,15 +25,48 @@ public class PostService {
     private final UserRepository userRepository;
 
 
-    public void postPost(PostRequestDto postRequestDto, TokenDecode tokenDecode) {
-        User user = userRepository.findById(tokenDecode.getId()).orElseThrow(
-                () -> new NullPointerException("ID DOES NOT EXIST")
-        );
+    public void postPost(PostRequestDto postRequestDto, String authorization) {
+        String token = authorization.substring(7);
+        DecodedJWT decodeToken = decode(token);
+        User user = userRepository.findById(Long.parseLong(decodeToken.getClaim("id").toString()))
+                .orElseThrow(() -> new NullPointerException("ID DOES NOT EXIST"));
 
-        Post post = new Post(postRequestDto, user.getFamilyName(), user.getFamilyName());
+        Post post = new Post(postRequestDto, user);
         postRepository.save(post);
     }
 
+    @Transactional
+    public Long deletePost(Long postId, String authorization) {
+        String token = authorization.substring(7);
+        DecodedJWT decodeToken = decode(token);
+        Post post = postRepository.findById(postId).orElseThrow(
+                () -> new NullPointerException("NO POST TO BE DELETED")
+        );
+        User user = userRepository.findById(Long.parseLong(decodeToken.getClaim("id").toString()))
+                .orElseThrow(() -> new NullPointerException("ID DOES NOT EXIST")
+        );
+        if(!post.getUser().getId().equals(user.getId())){
+            throw new IllegalArgumentException("ONLY THE ORIGINAL POSTER HAS THE RIGHT TO DELETE");
+        }
+        postRepository.deleteById(post.getId());
+        return postId;
+    }
+
+    @Transactional
+    public void updatePost(Long postId, PostRequestDto postRequestDto, String authorization) {
+        String token = authorization.substring(7);
+        DecodedJWT decodeToken = decode(token);
+
+        Post post = postRepository.findById(postId).orElseThrow(
+                () -> new NullPointerException("ID DOES NOT EXIST")
+        );
+        User user = userRepository.findById(Long.parseLong(decodeToken.getClaim("id").toString()))
+                .orElseThrow(() -> new NullPointerException("ID DOES NOT EXIST"));
+        if(!post.getUser().getId().equals(user.getId())){
+            throw new IllegalArgumentException("ONLY THE ORIGINAL POSTER HAVE THE RIGHT TO EDIT");
+        }
+        post.update(postRequestDto, user.getId());
+    }
 
     public List<PostResponseDto> getPosts() {
         List<Post> posts = postRepository.findAllByOrderByCreatedAtDesc();
@@ -49,35 +86,13 @@ public class PostService {
         return postResponseDto;
     }
 
-    @Transactional
-    public void updatePost(Long postId, PostRequestDto postRequestDto, TokenDecode tokenDecode) {
-        Post post = postRepository.findById(postId).orElseThrow(
-                () -> new NullPointerException("ID DOES NOT EXIST")
-        );
-        User user = userRepository.findById(tokenDecode.getId()).orElseThrow(
-                () -> new NullPointerException("ID DOES NOT EXIST")
-        );
-        if(!post.getUser().getId().equals(user.getId())){
-            throw new IllegalArgumentException("ONLY THE ORIGINAL POSTER HAVE THE RIGHT TO EDIT");
-        }
+    public DecodedJWT decode(String token){
+        Algorithm algorithm = Algorithm.HMAC256("rlaalswnrkgoTdma"); //use more secure key
+        JWTVerifier verifier = JWT.require(algorithm)
+                .withIssuer("gkdgo99") // 발급자
+                .build(); //Reusable verifier instance
 
-        post.update(postRequestDto, user.getId());
-
-
-    }
-
-    @Transactional
-    public Long deletePost(Long postId, TokenDecode tokenDecode) {
-        Post post = postRepository.findById(postId).orElseThrow(
-                () -> new NullPointerException("NO POST TO BE DELETED")
-        );
-        User user = userRepository.findById(tokenDecode.getId()).orElseThrow(
-                () -> new NullPointerException("ID DOES NOT EXIST")
-        );
-        if(!post.getUser().getId().equals(user.getId())){
-            throw new IllegalArgumentException("ONLY THE ORIGINAL POSTER HAS THE RIGHT TO DELETE");
-        }
-        postRepository.deleteById(post.getId());
-        return postId;
+        DecodedJWT jwt = verifier.verify(token);
+        return jwt;
     }
 }

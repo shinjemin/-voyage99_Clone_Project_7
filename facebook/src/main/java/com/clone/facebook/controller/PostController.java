@@ -16,9 +16,8 @@ public class PostController {
     private final PostService postService;
 
     @PostMapping("/api/board")
-    public void postPosts(@RequestBody PostRequestDto postRequestDto, HttpServletRequest httpRequest){
-        TokenDecode tokenDecode = (TokenDecode) httpRequest.getAttribute("decode");
-        postService.postPost(postRequestDto, tokenDecode);
+    public void postPosts(@RequestBody PostRequestDto postRequestDto, @RequestHeader("Authorization") String authorization){
+        postService.postPost(postRequestDto, authorization);
     }
 
     @GetMapping("/api/board")
@@ -34,15 +33,13 @@ public class PostController {
     @PutMapping("/api/board/{postId}")
     public Long updatePost(@PathVariable Long postId,
                            @RequestBody PostRequestDto postRequestDto,
-                           HttpServletRequest httpServletRequest){
-        TokenDecode tokenDecode = (TokenDecode) httpServletRequest.getAttribute("decode");
-        postService.updatePost(postId, postRequestDto, tokenDecode);
+                           @RequestHeader("Authorization") String authorization){
+        postService.updatePost(postId, postRequestDto, authorization);
         return postId;
     }
 
     @DeleteMapping("/api/board/{postId}")
-    public Long deletePost(@PathVariable Long postId, HttpServletRequest httpServletRequest){
-        TokenDecode tokenDecode = (TokenDecode) httpServletRequest.getAttribute("decode");
-        return postService.deletePost(postId, tokenDecode);
+    public Long deletePost(@PathVariable Long postId, @RequestHeader ("Authorization") String authorization){
+        return postService.deletePost(postId, authorization);
     }
 }
