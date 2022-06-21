@@ -33,7 +33,7 @@ public class UserService {
         try {
             // secret 키 노출되면 안돼서, secret.json 파일로 빼서 gitignore 파일에 secret.json 을 추가하는 식으로 막음
             // 테스트니까 그냥 아무 키 값 사용 / TokenFilter 와 동일한 시크릿 키, 발급자여야 함.
-            Algorithm algorithm = Algorithm.HMAC256("rlaalswnrkgoTdma");
+            Algorithm algorithm = Algorithm.HMAC256("7ZWt7ZW0OTkgN");
             token = JWT.create()
                     .withIssuer("gkdgo99") // 발급자
                     .withIssuedAt(now) // 생성시간
@@ -60,7 +60,7 @@ public class UserService {
             return new UserLoginRespDto(false, "리프레시 토큰 생성에 실패 하였습니다.");
 
         try {
-            Algorithm algorithm = Algorithm.HMAC256("rlaalswnrkgoTdma");
+            Algorithm algorithm = Algorithm.HMAC256("7ZWt7ZW0OTkgN");
             token = JWT.create()
                     .withIssuer("gkdgo99")
                     .withIssuedAt(now)
@@ -69,12 +69,14 @@ public class UserService {
                     .withClaim("mail", mail)
                     .sign(algorithm);
         } catch (JWTCreationException exception){
+
             return new UserLoginRespDto(false, "토큰 생성에 실패 하였습니다.");
         }
 
         // DB 에 리프레시 토큰을 저장 해야함
         // 나중에 갱신 할 때 DB 에 해당 리프레시 토큰과 엑세스 토큰이 같은지를 비교해서 해당 엑세스 토큰의 리프레시 토큰인지 확인을 해야함
         refreshTokenRepository.save(new RefreshToken(token, refreshToken));
+        System.out.println(token);
 
         return new UserLoginRespDto(true, token, refreshToken, "로그인 성공");
     }
@@ -85,7 +87,7 @@ public class UserService {
 
         // 리프레시 토큰은 만료기한 여부 등 인증 과정을 거침
         try {
-            Algorithm algorithm = Algorithm.HMAC256("rlaalswnrkgoTdma"); //use more secure key
+            Algorithm algorithm = Algorithm.HMAC256("7ZWt7ZW0OTkgN"); //use more secure key
             JWTVerifier verifier = JWT.require(algorithm)
                     .withIssuer("gkdgo99")
                     .build(); //Reusable verifier instance
@@ -124,7 +126,7 @@ public class UserService {
         DecodedJWT jwt;
 
         try {
-            Algorithm algorithm = Algorithm.HMAC256("rlaalswnrkgoTdma"); //use more secure key
+            Algorithm algorithm = Algorithm.HMAC256("7ZWt7ZW0OTkgN"); //use more secure key
             JWTVerifier verifier = JWT.require(algorithm)
                     .withIssuer("gkdgo99")
                     .build(); //Reusable verifier instance
