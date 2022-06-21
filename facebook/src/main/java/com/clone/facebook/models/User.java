@@ -36,7 +36,7 @@ public class User extends Timestamped{
     @Column(nullable = false)
     private String day;
 
-    @Column
+    @Column(nullable = true)
     private String imageUrl;
 
 
