@@ -8,7 +8,6 @@ import lombok.Setter;
 public class PostRequestDto {
     private String content;
     private String imageUrl;
-    private Long userId;
 
 
     public PostRequestDto(String content, String imageUrl){

@@ -12,8 +12,11 @@ public class UserRegisterRespDto {
     boolean result;
     String errorMsg;
 
+
     public UserRegisterRespDto(boolean result, String errorMsg) {
         this.result = result;
         this.errorMsg = errorMsg;
+
     }
+
 }

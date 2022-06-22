@@ -35,8 +35,9 @@ public class Post extends Timestamped{
     @Column(nullable = false)
     private String givenName;
 
-    public Post(PostRequestDto postRequestDto, String familyName, String givenName){
+    public Post(PostRequestDto postRequestDto, User user){
         this.content = postRequestDto.getContent();
+        this.user = user;
         this.familyName = user.getFamilyName();
         this.givenName = user.getGivenName();
     }

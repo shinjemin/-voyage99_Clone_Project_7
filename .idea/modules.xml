@@ -3,6 +3,9 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/-voyage99_Clone_Project_7.iml" filepath="$PROJECT_DIR$/.idea/-voyage99_Clone_Project_7.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/facebook.iml" filepath="$PROJECT_DIR$/.idea/modules/facebook.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/facebook.main.iml" filepath="$PROJECT_DIR$/.idea/modules/facebook.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/facebook.test.iml" filepath="$PROJECT_DIR$/.idea/modules/facebook.test.iml" />
     </modules>
   </component>
 </project>
