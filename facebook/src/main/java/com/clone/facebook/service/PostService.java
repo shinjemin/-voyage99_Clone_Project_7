@@ -24,14 +24,15 @@ public class PostService {
     private final UserRepository userRepository;
 
 
-    public void postPost(PostRequestDto postRequestDto, String authorization) {
+    public PostResponseDto postPost(PostRequestDto postRequestDto, String authorization) {
         String token = authorization.substring(7);
         DecodedJWT decodeToken = decode(token);
         User user = userRepository.findById(Long.parseLong(decodeToken.getClaim("id").toString()))
                 .orElseThrow(() -> new NullPointerException("ID DOES NOT EXIST"));
 
         Post post = new Post(postRequestDto, user);
-        postRepository.save(post);
+        PostResponseDto postResponseDto = new PostResponseDto(postRepository.save(post));
+        return postResponseDto;
     }
 
     @Transactional
@@ -44,7 +45,7 @@ public class PostService {
         User user = userRepository.findById(Long.parseLong(decodeToken.getClaim("id").toString()))
                 .orElseThrow(() -> new NullPointerException("ID DOES NOT EXIST")
                 );
-        if (!post.getUser().getId().equals(user.getId())) {
+        if(!post.getUser().getId().equals(user.getId())){
             throw new IllegalArgumentException("ONLY THE ORIGINAL POSTER HAS THE RIGHT TO DELETE");
         }
         postRepository.deleteById(post.getId());
@@ -61,30 +62,21 @@ public class PostService {
         );
         User user = userRepository.findById(Long.parseLong(decodeToken.getClaim("id").toString()))
                 .orElseThrow(() -> new NullPointerException("ID DOES NOT EXIST"));
-        if (!post.getUser().getId().equals(user.getId())) {
+        if(!post.getUser().getId().equals(user.getId())){
             throw new IllegalArgumentException("ONLY THE ORIGINAL POSTER HAVE THE RIGHT TO EDIT");
         }
         post.update(postRequestDto, user.getId());
     }
 
-    public List<PostResponseDto> getPosts(String authorization) {
-        String token = authorization.substring(7);
-        DecodedJWT decodeToken = decode(token);
-
-        if (!(decodeToken == null)) {
-            List<Post> posts = postRepository.findAllByOrderByCreatedAtDesc();
-            List<PostResponseDto> postResponseDtoList = new ArrayList<>();
-            for (Post post : posts) {
-                PostResponseDto postResponseDto = new PostResponseDto(post);
-                postResponseDtoList.add(postResponseDto);
-
-            }
-            return postResponseDtoList;
-        } else {
-            throw new IllegalArgumentException("오류가 발생하였습니다");
+    public List<PostResponseDto> getPosts() {
+        List<Post> posts = postRepository.findAllByOrderByModifiedAtDesc();
+        List<PostResponseDto> postResponseDtoList = new ArrayList<>();
+        for(Post post : posts) {
+            PostResponseDto postResponseDto = new PostResponseDto(post);
+            postResponseDtoList.add(postResponseDto);
         }
+        return postResponseDtoList;
     }
-
 
     public PostResponseDto getPostDetail(Long postId) {
         Post post = postRepository.findById(postId).orElseThrow(

@@ -26,7 +26,6 @@ public class UserService {
     private final UserRepository userRepository;
     private final RefreshTokenRepository refreshTokenRepository;
 
-
     public String generateRefreshToken(Date now, Date expireDate) {
         String token = "";
 
@@ -45,12 +44,15 @@ public class UserService {
 
         return token;
     }
-
     public UserLoginRespDto generateToken(Long id, String mail) {
         String token = "";
         Date now = new Date();
         Date expireDate = new Date(System.currentTimeMillis() + (1000L * 3600L * 24L * 7L)); // 7일
         Date refreshExpireDate = new Date(System.currentTimeMillis() + (1000L * 3600L * 24L * 30L)); // 30일
+
+        User user = userRepository.findById(id).orElseThrow(
+                () -> new IllegalArgumentException("존재하지 않는 회원입니다")
+        );
 
         // 일반적으로 엑세스 토큰보다 리프레시 토큰 수명 주기가 더 길어야 함
         // 엑세스 토큰은 7일, 리프레시 토큰은 30일
@@ -60,9 +62,6 @@ public class UserService {
             return new UserLoginRespDto(false, "리프레시 토큰 생성에 실패 하였습니다.");
 
         try {
-//            User user = userRepository.findById(id).orElseThrow(
-//                    () -> new NullPointerException("id가 존재하지않습니다")
-//            );
             Algorithm algorithm = Algorithm.HMAC256("7ZWt7ZW0OTkgN");
             token = JWT.create()
                     .withIssuer("gkdgo99")
@@ -70,19 +69,19 @@ public class UserService {
                     .withExpiresAt(expireDate)
                     .withClaim("id", id)
                     .withClaim("mail", mail)
-//                    .withClaim("familyName", user.getFamilyName())
                     .sign(algorithm);
         } catch (JWTCreationException exception){
-
             return new UserLoginRespDto(false, "토큰 생성에 실패 하였습니다.");
         }
 
         // DB 에 리프레시 토큰을 저장 해야함
         // 나중에 갱신 할 때 DB 에 해당 리프레시 토큰과 엑세스 토큰이 같은지를 비교해서 해당 엑세스 토큰의 리프레시 토큰인지 확인을 해야함
         refreshTokenRepository.save(new RefreshToken(token, refreshToken));
-        System.out.println(token);
 
-        return new UserLoginRespDto(true, token, refreshToken, "로그인 성공", mail);
+        String familyName = user.getFamilyName();
+        String givenName = user.getGivenName();
+
+        return new UserLoginRespDto(true, token, refreshToken, "로그인 성공", familyName, givenName, mail);
     }
 
     // 토큰 재발급
@@ -211,7 +210,6 @@ public class UserService {
     }
 
 }
-
 
 
 

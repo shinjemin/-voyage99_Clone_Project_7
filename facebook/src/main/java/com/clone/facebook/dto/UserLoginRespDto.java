@@ -13,6 +13,9 @@ public class UserLoginRespDto {
     String errorMsg;
     String token;
     String refreshToken;
+
+    String familyName;
+    String givenName;
     String mail;
 
     public UserLoginRespDto(boolean result, String errorMsg) {
@@ -20,11 +23,14 @@ public class UserLoginRespDto {
         this.errorMsg = errorMsg;
     }
 
-    public UserLoginRespDto(boolean result, String token, String refreshToken, String errorMsg, String mail) {
+    public UserLoginRespDto(boolean result, String token, String refreshToken, String errorMsg, String familyName, String givenName, String mail) {
         this.result = result;
         this.errorMsg = errorMsg;
         this.token = token;
         this.refreshToken = refreshToken;
+        this.familyName = familyName;
+        this.givenName = givenName;
         this.mail = mail;
     }
 }
+
