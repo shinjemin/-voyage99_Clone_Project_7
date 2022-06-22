@@ -61,7 +61,6 @@ public class UserController {
     // 회원 가입 요청 처리
     @PostMapping("/user/signup")
     public UserRegisterRespDto registerUser(@RequestBody SignupDto Dto) throws NoSuchAlgorithmException {
-
         return userService.registerUser(Dto);
     }
 

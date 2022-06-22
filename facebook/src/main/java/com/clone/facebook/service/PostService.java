@@ -25,14 +25,15 @@ public class PostService {
     private final UserRepository userRepository;
 
 
-    public void postPost(PostRequestDto postRequestDto, String authorization) {
+    public Long postPost(PostRequestDto postRequestDto, String authorization) {
         String token = authorization.substring(7);
-        DecodedJWT decodeToken = decode(token);
+        DecodedJWT decodeToken = decode(token); //
         User user = userRepository.findById(Long.parseLong(decodeToken.getClaim("id").toString()))
                 .orElseThrow(() -> new NullPointerException("ID DOES NOT EXIST"));
 
         Post post = new Post(postRequestDto, user);
-        postRepository.save(post);
+
+        return postRepository.save(post).getId();
     }
 
     @Transactional
@@ -68,21 +69,34 @@ public class PostService {
         post.update(postRequestDto, user.getId());
     }
 
-    public List<PostResponseDto> getPosts() {
+    public List<PostResponseDto> getPosts(String authorization) {
+        String token = authorization.substring(7);
+        DecodedJWT decodeToken = decode(token);
+
         List<Post> posts = postRepository.findAllByOrderByCreatedAtDesc();
         List<PostResponseDto> postResponseDtoList = new ArrayList<>();
-        for(Post post : posts) {
-            PostResponseDto postResponseDto = new PostResponseDto(post);
-            postResponseDtoList.add(postResponseDto);
+
+        if(decodeToken != null) {
+            for (Post post : posts) {
+                PostResponseDto postResponseDto = new PostResponseDto(post);
+                postResponseDtoList.add(postResponseDto);
+            }
         }
         return postResponseDtoList;
     }
 
-    public PostResponseDto getPostDetail(Long postId) {
-        Post post = postRepository.findById(postId).orElseThrow(
-                () -> new NullPointerException("ID DOES NOT EXIST")
-        );
-        PostResponseDto postResponseDto = new PostResponseDto(post);
+    public PostResponseDto getPostDetail(Long postId, String authorization) {
+        String token = authorization.substring(7);
+        DecodedJWT decodeToken = decode(token);
+
+        PostResponseDto postResponseDto = null;
+
+        if(decodeToken != null){
+            Post post = postRepository.findById(postId).orElseThrow(
+                    () -> new NullPointerException("PostId DOES NOT EXIST")
+            );
+            postResponseDto = new PostResponseDto(post);
+        }
         return postResponseDto;
     }
 

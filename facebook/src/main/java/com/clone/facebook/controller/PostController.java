@@ -16,18 +16,19 @@ public class PostController {
     private final PostService postService;
 
     @PostMapping("/api/board")
-    public void postPosts(@RequestBody PostRequestDto postRequestDto, @RequestHeader("Authorization") String authorization){
-        postService.postPost(postRequestDto, authorization);
+    public Long postPosts(@RequestBody PostRequestDto postRequestDto, @RequestHeader("Authorization") String authorization){
+
+        return postService.postPost(postRequestDto, authorization);
     }
 
     @GetMapping("/api/board")
-    public List<PostResponseDto> getPosts(){
-        return postService.getPosts();
+    public List<PostResponseDto> getPosts(@RequestHeader("Authorization") String authorization){
+        return postService.getPosts(authorization);
     }
 
     @GetMapping("/api/board/user/{postId}")
-    public PostResponseDto getPostDetail(@PathVariable Long postId){
-        return postService.getPostDetail(postId);
+    public PostResponseDto getPostDetail(@PathVariable Long postId, @RequestHeader("Authorization") String authorization){
+        return postService.getPostDetail(postId, authorization);
     }
 
     @PutMapping("/api/board/{postId}")
