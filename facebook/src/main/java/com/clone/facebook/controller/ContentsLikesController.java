@@ -20,9 +20,8 @@ public class ContentsLikesController {
     }
 
     @PostMapping("api/contents/like/{contentsId}")
-    public Long changeLike(@PathVariable Long contentsId,  @RequestBody CommentLikesDto commentLikesDto){
-        Long userId = (long)0;
-        return contentsLikesService.changeLike(contentsId,commentLikesDto,userId);
+    public Long changeLike(@PathVariable Long contentsId,  @RequestBody CommentLikesDto commentLikesDto, @RequestHeader("Authorization") String authorization){
+        return contentsLikesService.changeLike(contentsId,commentLikesDto,authorization);
 
     }
 }

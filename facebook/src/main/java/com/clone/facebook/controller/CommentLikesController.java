@@ -17,9 +17,9 @@ public class CommentLikesController {
     }
 
     @PostMapping("api/comment/like/{commentId}")
-    public Long changeLike(@PathVariable Long commentId,  @RequestBody CommentLikesDto commentLikesDto){
-        Long userId = (long)0;
-        return commentLikesService.changeLike(commentId,commentLikesDto,userId);
+    public Long changeLike(@PathVariable Long commentId,  @RequestBody CommentLikesDto commentLikesDto, @RequestHeader("Authorization") String authorization){
+
+        return commentLikesService.changeLike(commentId,commentLikesDto,authorization);
 
     }
 }

@@ -23,19 +23,19 @@ public class CommentController {
     }
 
     @PostMapping("/api/board/post/{contentsId}")
-    public Long postComment(@PathVariable Long contentsId, @RequestBody CommentDto commentDto){
-        Long userId = (long)0;
-        return commentService.postComment(contentsId,commentDto,userId);
+    public Long postComment(@PathVariable Long contentsId, @RequestBody CommentDto commentDto, @RequestHeader("Authorization") String authorization){
+
+        return commentService.postComment(contentsId,commentDto,authorization);
     }
 
     @PutMapping("/api/board/put/{contentsId}/{id}")
-    public Long updateComment(@PathVariable Long contentsId,@PathVariable Long id, @RequestBody CommentDto commentDto ){
-        Long userId = (long)0;
-        return commentService.updateComment(contentsId,id,commentDto,userId);
+    public Long updateComment(@PathVariable Long contentsId,@PathVariable Long id, @RequestBody CommentDto commentDto, @RequestHeader("Authorization") String authorization ){
+
+        return commentService.updateComment(contentsId,id,commentDto,authorization);
     }
 
     @DeleteMapping("/api/board/delete/{contentsId}/{id}")
-    public Long deleteComment(@PathVariable Long contentsId,@PathVariable Long id ){
-        return commentService.deleteComment(contentsId,id);
+    public Long deleteComment(@PathVariable Long contentsId,@PathVariable Long id , @RequestHeader("Authorization") String authorization){
+        return commentService.deleteComment(contentsId,id,authorization);
     }
 }

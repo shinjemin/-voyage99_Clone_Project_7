@@ -1,14 +1,20 @@
 package com.clone.facebook.service;
 
+
+import com.auth0.jwt.interfaces.DecodedJWT;
+
 import com.clone.facebook.dto.CommentLikesDto;
 
 import com.clone.facebook.models.ContentsLikes;
 
+import com.clone.facebook.models.User;
 import com.clone.facebook.repository.ContentsLikesRepository;
+import com.clone.facebook.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import static com.auth0.jwt.JWT.decode;
 
 
 @RequiredArgsConstructor
@@ -16,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class ContentsLikesService {
 
     private final ContentsLikesRepository contentsLikesRepository;
+    private final UserRepository userRepository;
 
 
     @Transactional
@@ -25,9 +32,15 @@ public class ContentsLikesService {
     }
 
     @Transactional
-    public Long changeLike(Long contentsId, CommentLikesDto commentLikesDto, Long userId){
+    public Long changeLike(Long contentsId, CommentLikesDto commentLikesDto, String authorization){
+        String token = authorization.substring(7);
+        DecodedJWT decodeToken = decode(token);
+        User user = userRepository.findById(Long.parseLong(decodeToken.getClaim("id").toString()))
+                .orElseThrow(() -> new NullPointerException("ID DOES NOT EXIST"));
+
+
         if(contentsLikesRepository.findByContentsId(contentsId) ==null){
-            ContentsLikes contentsLikes = new ContentsLikes(contentsId,userId,commentLikesDto);
+            ContentsLikes contentsLikes = new ContentsLikes(contentsId,user.getId(),commentLikesDto);
             contentsLikesRepository.save(contentsLikes);
             return contentsLikes.getContentsId();
         }else{
