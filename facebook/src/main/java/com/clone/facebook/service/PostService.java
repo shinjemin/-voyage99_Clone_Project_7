@@ -87,7 +87,7 @@ public class PostService {
     }
 
     public DecodedJWT decode(String token){
-        Algorithm algorithm = Algorithm.HMAC256("rlaalswnrkgoTdma"); //use more secure key
+        Algorithm algorithm = Algorithm.HMAC256("7ZWt7ZW0OTkgN"); //use more secure key
         JWTVerifier verifier = JWT.require(algorithm)
                 .withIssuer("gkdgo99") // 발급자
                 .build(); //Reusable verifier instance

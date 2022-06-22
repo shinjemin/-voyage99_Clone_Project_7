@@ -33,12 +33,12 @@ public class CommentLikesService {
         User user = userRepository.findById(Long.parseLong(decodeToken.getClaim("id").toString()))
                 .orElseThrow(() -> new NullPointerException("ID DOES NOT EXIST"));
 
-        if(commentLikesRepository.findByCommentId(commentId) ==null){
+        if(commentLikesRepository.findByCommentIdAndUserId(commentId, user.getId()) ==null){
             CommentLikes commentLikes = new CommentLikes(commentId,user.getId(),commentLikesDto);
             commentLikesRepository.save(commentLikes);
             return commentLikes.getCommentId();
         }else{
-            CommentLikes commentLikes = commentLikesRepository.findByCommentId(commentId);
+            CommentLikes commentLikes = commentLikesRepository.findByCommentIdAndUserId(commentId,user.getId());
             commentLikes.changeLike(commentLikesDto.getLike());
             return commentLikes.getCommentId();
 

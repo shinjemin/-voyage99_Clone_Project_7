@@ -26,9 +26,9 @@ public class ContentsLikesService {
 
 
     @Transactional
-    public Long getLikes(Long commentId){
+    public Long getLikes(Long contentsId){
         int like = 1;
-        return (long)contentsLikesRepository.findAllByContentsIdAndLike(commentId,like).size();
+        return (long)contentsLikesRepository.findAllByContentsIdAndLike(contentsId,like).size();
     }
 
     @Transactional
@@ -39,12 +39,12 @@ public class ContentsLikesService {
                 .orElseThrow(() -> new NullPointerException("ID DOES NOT EXIST"));
 
 
-        if(contentsLikesRepository.findByContentsId(contentsId) ==null){
+        if(contentsLikesRepository.findByContentsIdAndUserId(contentsId, user.getId()) ==null){
             ContentsLikes contentsLikes = new ContentsLikes(contentsId,user.getId(),commentLikesDto);
             contentsLikesRepository.save(contentsLikes);
             return contentsLikes.getContentsId();
         }else{
-            ContentsLikes contentsLikes = contentsLikesRepository.findByContentsId(contentsId);
+            ContentsLikes contentsLikes = contentsLikesRepository.findByContentsIdAndUserId(contentsId, user.getId());
             contentsLikes.changeLike(commentLikesDto.getLike());
             return contentsLikes.getContentsId();
 
