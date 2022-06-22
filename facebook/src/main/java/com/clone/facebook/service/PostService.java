@@ -7,7 +7,6 @@ import com.auth0.jwt.interfaces.JWTVerifier;
 import com.clone.facebook.dto.PostRequestDto;
 import com.clone.facebook.dto.PostResponseDto;
 import com.clone.facebook.models.Post;
-import com.clone.facebook.models.TokenDecode;
 import com.clone.facebook.models.User;
 import com.clone.facebook.repository.PostRepository;
 import com.clone.facebook.repository.UserRepository;
@@ -44,8 +43,8 @@ public class PostService {
         );
         User user = userRepository.findById(Long.parseLong(decodeToken.getClaim("id").toString()))
                 .orElseThrow(() -> new NullPointerException("ID DOES NOT EXIST")
-        );
-        if(!post.getUser().getId().equals(user.getId())){
+                );
+        if (!post.getUser().getId().equals(user.getId())) {
             throw new IllegalArgumentException("ONLY THE ORIGINAL POSTER HAS THE RIGHT TO DELETE");
         }
         postRepository.deleteById(post.getId());
@@ -62,21 +61,30 @@ public class PostService {
         );
         User user = userRepository.findById(Long.parseLong(decodeToken.getClaim("id").toString()))
                 .orElseThrow(() -> new NullPointerException("ID DOES NOT EXIST"));
-        if(!post.getUser().getId().equals(user.getId())){
+        if (!post.getUser().getId().equals(user.getId())) {
             throw new IllegalArgumentException("ONLY THE ORIGINAL POSTER HAVE THE RIGHT TO EDIT");
         }
         post.update(postRequestDto, user.getId());
     }
 
-    public List<PostResponseDto> getPosts() {
-        List<Post> posts = postRepository.findAllByOrderByCreatedAtDesc();
-        List<PostResponseDto> postResponseDtoList = new ArrayList<>();
-        for(Post post : posts) {
-            PostResponseDto postResponseDto = new PostResponseDto(post);
-            postResponseDtoList.add(postResponseDto);
+    public List<PostResponseDto> getPosts(String authorization) {
+        String token = authorization.substring(7);
+        DecodedJWT decodeToken = decode(token);
+
+        if (!(decodeToken == null)) {
+            List<Post> posts = postRepository.findAllByOrderByCreatedAtDesc();
+            List<PostResponseDto> postResponseDtoList = new ArrayList<>();
+            for (Post post : posts) {
+                PostResponseDto postResponseDto = new PostResponseDto(post);
+                postResponseDtoList.add(postResponseDto);
+
+            }
+            return postResponseDtoList;
+        } else {
+            throw new IllegalArgumentException("오류가 발생하였습니다");
         }
-        return postResponseDtoList;
     }
+
 
     public PostResponseDto getPostDetail(Long postId) {
         Post post = postRepository.findById(postId).orElseThrow(
@@ -87,7 +95,7 @@ public class PostService {
     }
 
     public DecodedJWT decode(String token){
-        Algorithm algorithm = Algorithm.HMAC256("rlaalswnrkgoTdma"); //use more secure key
+        Algorithm algorithm = Algorithm.HMAC256("7ZWt7ZW0OTkgN"); //use more secure key
         JWTVerifier verifier = JWT.require(algorithm)
                 .withIssuer("gkdgo99") // 발급자
                 .build(); //Reusable verifier instance

@@ -19,7 +19,7 @@ public class UserController {
         this.userService = userService;
     }
 
-    // 토큰 테스트
+     //토큰 테스트
     @GetMapping("/user/tokentest")
     public UserTokenRespDto tokenTest(@RequestHeader("Authorization") String authorization) {
         if (!authorization.startsWith("Bearer "))

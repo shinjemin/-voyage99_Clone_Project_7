@@ -13,12 +13,15 @@ public class PostResponseDto {
     private String content;
     private Long likes;
 
+    private String givenName;
+
     public PostResponseDto(Post post){
         this.postId = post.getId();
         this.familyName = post.getFamilyName();
         this.imageURL = post.getImageURL();
         this.content = post.getContent();
         this.likes = post.getLikes();
+        this.givenName = post.getGivenName();
     }
 }
 
