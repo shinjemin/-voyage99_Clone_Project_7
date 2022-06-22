@@ -1,7 +1,7 @@
 package com.clone.facebook.models;
 
 
-import com.clone.facebook.dto.CommentLikesDto;
+import com.clone.facebook.dto.CommentLikesRequestDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -23,7 +23,7 @@ public class CommentLikes {
     private Long userId;
 
 
-    public CommentLikes(Long commentId, Long userId, CommentLikesDto commentLikesDto){
+    public CommentLikes(Long commentId, Long userId, CommentLikesRequestDto commentLikesDto){
         this.commentId=commentId;
         this.like = commentLikesDto.getLike();
         this.userId = userId;

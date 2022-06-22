@@ -3,7 +3,8 @@ package com.clone.facebook.service;
 
 import com.auth0.jwt.interfaces.DecodedJWT;
 
-import com.clone.facebook.dto.CommentLikesDto;
+import com.clone.facebook.dto.CommentLikesRequestDto;
+
 
 import com.clone.facebook.models.ContentsLikes;
 
@@ -24,6 +25,15 @@ public class ContentsLikesService {
     private final ContentsLikesRepository contentsLikesRepository;
     private final UserRepository userRepository;
 
+    private User getUser(String authorization){
+        String token = authorization.substring(7);
+        DecodedJWT decodeToken = decode(token);
+        User user = userRepository.findById(Long.parseLong(decodeToken.getClaim("id").toString()))
+                .orElseThrow(() -> new NullPointerException("ID DOES NOT EXIST"));
+        return user;
+
+    }
+
 
     @Transactional
     public Long getLikes(Long contentsId){
@@ -32,20 +42,16 @@ public class ContentsLikesService {
     }
 
     @Transactional
-    public Long changeLike(Long contentsId, CommentLikesDto commentLikesDto, String authorization){
-        String token = authorization.substring(7);
-        DecodedJWT decodeToken = decode(token);
-        User user = userRepository.findById(Long.parseLong(decodeToken.getClaim("id").toString()))
-                .orElseThrow(() -> new NullPointerException("ID DOES NOT EXIST"));
-
-
-        if(contentsLikesRepository.findByContentsIdAndUserId(contentsId, user.getId()) ==null){
-            ContentsLikes contentsLikes = new ContentsLikes(contentsId,user.getId(),commentLikesDto);
+    public Long changeLike(Long contentsId, CommentLikesRequestDto commentLikesDto, String authorization){
+        if(contentsLikesRepository.findByContentsIdAndUserId(contentsId, getUser(authorization).getId()) ==null){
+            ContentsLikes contentsLikes = new ContentsLikes(contentsId,getUser(authorization).getId(),commentLikesDto);
             contentsLikesRepository.save(contentsLikes);
+
             return contentsLikes.getContentsId();
         }else{
-            ContentsLikes contentsLikes = contentsLikesRepository.findByContentsIdAndUserId(contentsId, user.getId());
+            ContentsLikes contentsLikes = contentsLikesRepository.findByContentsIdAndUserId(contentsId, getUser(authorization).getId());
             contentsLikes.changeLike(commentLikesDto.getLike());
+
             return contentsLikes.getContentsId();
 
         }
