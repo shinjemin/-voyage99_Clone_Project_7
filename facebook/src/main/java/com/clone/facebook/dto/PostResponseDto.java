@@ -22,7 +22,7 @@ public class PostResponseDto {
     public PostResponseDto(Post post){
         this.postId = post.getId();
         this.familyName = post.getFamilyName();
-        this.imageURL = post.getImageURL();
+        this.imageURL = post.getImageUrl();
         this.content = post.getContent();
         this.likes = post.getLikes();
         this.givenName = post.getGivenName();

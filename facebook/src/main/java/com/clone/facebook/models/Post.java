@@ -20,7 +20,7 @@ public class Post extends Timestamped{
     private String content;
 
     @Column(nullable = true)
-    private String imageURL;
+    private String imageUrl;
 
     @Column(nullable = true)
     private Long likes;
@@ -48,6 +48,6 @@ public class Post extends Timestamped{
 
     public void update(PostRequestDto postRequestDto, Long id) {
         this.content = postRequestDto.getContent();
-        this.imageURL = postRequestDto.getImageUrl();
+        this.imageUrl = postRequestDto.getImageUrl();
     }
 }
