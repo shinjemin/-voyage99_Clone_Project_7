@@ -35,11 +35,15 @@ public class Post extends Timestamped{
     @Column(nullable = false)
     private String givenName;
 
+    @Column(nullable = false)
+    private String mail;
+
     public Post(PostRequestDto postRequestDto, User user){
         this.content = postRequestDto.getContent();
         this.user = user;
         this.familyName = user.getFamilyName();
         this.givenName = user.getGivenName();
+        this.mail = user.getMail();
     }
 
     public void update(PostRequestDto postRequestDto, Long id) {
