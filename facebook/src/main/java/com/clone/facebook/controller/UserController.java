@@ -66,6 +66,7 @@ public class UserController {
 
         return userService.registerUser(Dto);
     }
+
     //프로필 이미지
 //    @PostMapping("/api/user/image")
 //    public ProfileResponseDto registImage(@RequestParam("image") MultipartFile file,@AuthenticationPrincipal  UserDetailsImpl userDetails) throws IOException {
@@ -79,5 +80,5 @@ public class UserController {
     public Boolean emailDupCheck(@PathVariable String mail) {
 
         return userService.checkMailDuplicate(mail);
-   }
+    }
 }

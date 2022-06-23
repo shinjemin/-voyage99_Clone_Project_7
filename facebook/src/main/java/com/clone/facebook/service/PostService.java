@@ -7,7 +7,6 @@ import com.auth0.jwt.interfaces.JWTVerifier;
 import com.clone.facebook.dto.PostRequestDto;
 import com.clone.facebook.dto.PostResponseDto;
 import com.clone.facebook.models.Post;
-import com.clone.facebook.models.TokenDecode;
 import com.clone.facebook.models.User;
 import com.clone.facebook.repository.PostRepository;
 import com.clone.facebook.repository.UserRepository;
@@ -25,14 +24,15 @@ public class PostService {
     private final UserRepository userRepository;
 
 
-    public void postPost(PostRequestDto postRequestDto, String authorization) {
+    public PostResponseDto postPost(PostRequestDto postRequestDto, String authorization) {
         String token = authorization.substring(7);
         DecodedJWT decodeToken = decode(token);
         User user = userRepository.findById(Long.parseLong(decodeToken.getClaim("id").toString()))
                 .orElseThrow(() -> new NullPointerException("ID DOES NOT EXIST"));
 
         Post post = new Post(postRequestDto, user);
-        postRepository.save(post);
+        PostResponseDto postResponseDto = new PostResponseDto(postRepository.save(post));
+        return postResponseDto;
     }
 
     @Transactional
@@ -44,7 +44,7 @@ public class PostService {
         );
         User user = userRepository.findById(Long.parseLong(decodeToken.getClaim("id").toString()))
                 .orElseThrow(() -> new NullPointerException("ID DOES NOT EXIST")
-        );
+                );
         if(!post.getUser().getId().equals(user.getId())){
             throw new IllegalArgumentException("ONLY THE ORIGINAL POSTER HAS THE RIGHT TO DELETE");
         }
@@ -69,7 +69,7 @@ public class PostService {
     }
 
     public List<PostResponseDto> getPosts() {
-        List<Post> posts = postRepository.findAllByOrderByCreatedAtDesc();
+        List<Post> posts = postRepository.findAllByOrderByModifiedAtDesc();
         List<PostResponseDto> postResponseDtoList = new ArrayList<>();
         for(Post post : posts) {
             PostResponseDto postResponseDto = new PostResponseDto(post);
