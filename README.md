@@ -15,6 +15,7 @@
 # 1. 프로젝트 소개
 페이스북 페이지 클론하기(회원가입/로그인 + CRUD + 댓글/좋아요) 
 # 2. API 명세서
-#<img width="306" alt="스크린샷 2022-06-22 21 23 08" src="https://user-images.githubusercontent.com/68536103/175215444-f35953eb-30ce-4c71-a808-efad63ee4175.png">
+<img width="307" alt="스크린샷 2022-06-23 18 34 20" src="https://user-images.githubusercontent.com/68536103/175267841-512f11f3-2687-41fe-b706-bc0b3aacdf74.png">
+
 # 3. ERD
 ![캡처1](https://user-images.githubusercontent.com/68536103/175215683-7a85a9a6-0059-44f9-b780-bddfd7d863b6.png)
