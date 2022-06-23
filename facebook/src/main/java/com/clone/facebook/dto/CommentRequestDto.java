@@ -3,6 +3,7 @@ package com.clone.facebook.dto;
 import lombok.Getter;
 
 @Getter
-public class CommentLikesDto {
-    private int like;
+public class CommentRequestDto {
+    private String comment;
+
 }

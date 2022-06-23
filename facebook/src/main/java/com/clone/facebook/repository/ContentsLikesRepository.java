@@ -8,5 +8,5 @@ import java.util.List;
 
 public interface ContentsLikesRepository extends JpaRepository<ContentsLikes,Long> {
     List<ContentsLikes> findAllByContentsIdAndLike(Long contentsId,int like);
-    ContentsLikes findByContentsId(Long contentsId);
+    ContentsLikes findByContentsIdAndUserId(Long contentsId, Long userId);
 }

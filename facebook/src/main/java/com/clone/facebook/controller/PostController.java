@@ -10,7 +10,6 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-
 public class PostController {
     private final PostService postService;
 

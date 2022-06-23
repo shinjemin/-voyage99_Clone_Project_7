@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface CommentLikesRepository extends JpaRepository<CommentLikes,Long> {
     List<CommentLikes> findAllByCommentIdAndLike(Long commentId,int like);
-    CommentLikes findByCommentId(Long commentId);
+    CommentLikes findByCommentIdAndUserId(Long commentId,Long userId);
 }

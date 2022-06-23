@@ -1,6 +1,7 @@
 package com.clone.facebook.controller;
 
-import com.clone.facebook.dto.CommentLikesDto;
+import com.clone.facebook.dto.CommentLikesRequestDto;
+
 
 import com.clone.facebook.service.ContentsLikesService;
 import lombok.RequiredArgsConstructor;
@@ -20,9 +21,8 @@ public class ContentsLikesController {
     }
 
     @PostMapping("api/contents/like/{contentsId}")
-    public Long changeLike(@PathVariable Long contentsId,  @RequestBody CommentLikesDto commentLikesDto){
-        Long userId = (long)0;
-        return contentsLikesService.changeLike(contentsId,commentLikesDto,userId);
+    public Long changeLike(@PathVariable Long contentsId, @RequestBody CommentLikesRequestDto commentLikesDto, @RequestHeader("Authorization") String authorization){
+        return contentsLikesService.changeLike(contentsId,commentLikesDto,authorization);
 
     }
 }

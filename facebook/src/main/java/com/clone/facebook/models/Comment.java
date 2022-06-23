@@ -1,6 +1,6 @@
 package com.clone.facebook.models;
 
-import com.clone.facebook.dto.CommentDto;
+import com.clone.facebook.dto.CommentRequestDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -23,15 +23,25 @@ public class Comment extends Timestamped{
     @Column(nullable = false)
     private String comment;
 
-    public Comment(Long contentsId,CommentDto commentDto,Long userId){
-        this.userId = userId;
+    @Column(nullable = false)
+    private String familyName;
+
+    @Column(nullable = false)
+    private String givenName;
+
+    public Comment(Long contentsId, CommentRequestDto commentDto, User user){
+        this.userId = user.getId();
         this.comment = commentDto.getComment();
         this.contentsId = contentsId;
+        this.familyName = user.getFamilyName();
+        this.givenName = user.getGivenName();
     }
-    public void  update(Long contentsId,CommentDto commentDto,Long userId){
-        this.userId = userId;
+    public void  update(Long contentsId, CommentRequestDto commentDto, User user){
+        this.userId = user.getId();
         this.comment = commentDto.getComment();
         this.contentsId = contentsId;
+        this.familyName = user.getFamilyName();
+        this.givenName = user.getGivenName();
     }
 
 }
