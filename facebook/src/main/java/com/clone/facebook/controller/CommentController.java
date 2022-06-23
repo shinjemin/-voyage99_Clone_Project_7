@@ -4,6 +4,7 @@ import com.clone.facebook.dto.CommentRequestDto;
 import com.clone.facebook.dto.CommentResponseDto;
 
 
+import com.clone.facebook.models.Comment;
 import com.clone.facebook.service.CommentService;
 
 import lombok.RequiredArgsConstructor;
@@ -18,10 +19,10 @@ public class CommentController {
     private final CommentService commentService;
 
     @GetMapping("/api/board/get/{contentsId}")
-    public List<CommentResponseDto> getComment(@PathVariable Long contentsId, @RequestHeader("Authorization") String authorization){
+    public List<Comment> getComment(@PathVariable Long contentsId){
 
 
-        return commentService.getComment(contentsId,authorization);
+        return commentService.getComment(contentsId);
     }
 
     @PostMapping("/api/board/post/{contentsId}")

@@ -2,7 +2,7 @@ package com.clone.facebook.service;
 
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.clone.facebook.dto.CommentRequestDto;
-import com.clone.facebook.dto.CommentResponseDto;
+
 
 
 import com.clone.facebook.models.Comment;
@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static com.auth0.jwt.JWT.decode;
@@ -35,18 +34,9 @@ public class CommentService {
     }
 
     @Transactional
-    public List<CommentResponseDto> getComment(Long contentsId, String authorization){
-
-
+    public List<Comment> getComment(Long contentsId){
         List<Comment> comments = commentRepository.findAllByContentsId(contentsId);
-        List<CommentResponseDto> commentResponseDtoList = new ArrayList<>();
-        for(Comment comment : comments) {
-
-            CommentResponseDto commentResponseDto = new CommentResponseDto(comment,getUser(authorization));
-            commentResponseDtoList.add(commentResponseDto);
-        }
-
-        return commentResponseDtoList;
+        return comments;
     }
 
     @Transactional
